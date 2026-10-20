@@ -12,7 +12,7 @@ const __dirname = path.dirname(__filename);
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = Number(process.env.PORT) || 3000;
 
   app.use(cors());
   app.use(express.json({ limit: '10mb' }));
@@ -173,8 +173,11 @@ login({ appState: config.appState }, config.loginOptions || {}, (err, api) => {
 
   // --- VITE MIDDLEWARE / STATIC SERVING ---
   const isProduction = process.env.NODE_ENV === 'production';
+  const distPath = path.join(process.cwd(), 'dist');
+  const hasDist = fs.existsSync(path.join(distPath, 'index.html'));
 
-  if (!isProduction) {
+  if (!isProduction || !hasDist) {
+    // If in development OR if dist was not pre-built on Render, compile on the fly with Vite
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa'
@@ -199,16 +202,11 @@ login({ appState: config.appState }, config.loginOptions || {}, (err, api) => {
       }
     });
   } else {
-    const distPath = path.join(process.cwd(), 'dist');
-    const indexPath = fs.existsSync(path.join(distPath, 'index.html'))
-      ? path.join(distPath, 'index.html')
-      : path.join(process.cwd(), 'index.html');
-
+    // Pre-built production bundle
     app.use(express.static(distPath));
-    app.use(express.static(process.cwd()));
     app.get('*', (req, res, next) => {
       if (req.originalUrl.startsWith('/api')) return next();
-      res.sendFile(indexPath);
+      res.sendFile(path.join(distPath, 'index.html'));
     });
   }
 

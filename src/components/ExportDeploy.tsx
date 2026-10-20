@@ -156,6 +156,54 @@ node index.js
         </div>
       </div>
 
+      {/* Render.com Deployment Guide */}
+      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20">
+              <ExternalLink className="w-4 h-4" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-white">Render.com Hosting Settings (Fix White Screen)</h3>
+              <p className="text-xs text-slate-400">Configure these exact commands in your Render Web Service dashboard to prevent white screen</p>
+            </div>
+          </div>
+          <span className="text-[11px] px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">
+            render.yaml Included
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
+          <div className="p-3.5 bg-slate-950 rounded-xl border border-slate-800 space-y-1">
+            <div className="flex justify-between items-center text-slate-400">
+              <span>Build Command:</span>
+              <button
+                onClick={() => copyToClipboard('npm install && npm run build', 'render-build')}
+                className="text-[11px] text-indigo-400 hover:text-indigo-300"
+              >
+                {copiedType === 'render-build' ? 'Copied!' : 'Copy'}
+              </button>
+            </div>
+            <div className="text-emerald-400 font-bold">npm install &amp;&amp; npm run build</div>
+            <p className="text-[10px] text-slate-500 font-sans pt-1">Builds the React frontend assets into /dist before server launch.</p>
+          </div>
+
+          <div className="p-3.5 bg-slate-950 rounded-xl border border-slate-800 space-y-1">
+            <div className="flex justify-between items-center text-slate-400">
+              <span>Start Command:</span>
+              <button
+                onClick={() => copyToClipboard('node server.js', 'render-start')}
+                className="text-[11px] text-indigo-400 hover:text-indigo-300"
+              >
+                {copiedType === 'render-start' ? 'Copied!' : 'Copy'}
+              </button>
+            </div>
+            <div className="text-indigo-400 font-bold">node server.js</div>
+            <p className="text-[10px] text-slate-500 font-sans pt-1">Listens on dynamic PORT environment variable assigned by Render.</p>
+          </div>
+        </div>
+      </div>
+
       {/* Code Snippets Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Standalone index.js */}
