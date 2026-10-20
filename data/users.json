@@ -1,0 +1,89 @@
+{
+  "100089234123456": {
+    "uid": "100089234123456",
+    "name": "Nexus Master (Owner)",
+    "role": 2,
+    "balance": 250000,
+    "bank": 1000000,
+    "exp": 4500,
+    "level": 15,
+    "dailyStreak": 14,
+    "lastDaily": 1729350000000,
+    "lastWork": 1729350000000,
+    "lastRob": 0,
+    "lastMine": 1729350000000,
+    "lastFish": 1729350000000,
+    "stats": {
+      "gamesPlayed": 85,
+      "gamesWon": 56,
+      "totalEarned": 420000
+    },
+    "inventory": {
+      "fish": {
+        "Golden Koi": 2,
+        "Silver Salmon": 5
+      },
+      "ores": {
+        "Diamond": 4,
+        "Netherite": 1,
+        "Gold": 12
+      }
+    },
+    "createdAt": 1729300000000,
+    "updatedAt": 1792459687924
+  },
+  "100098765432100": {
+    "uid": "100098765432100",
+    "name": "Sarah Connor (Admin)",
+    "role": 1,
+    "balance": 75000,
+    "bank": 250000,
+    "exp": 1800,
+    "level": 8,
+    "dailyStreak": 5,
+    "lastDaily": 1729350000000,
+    "lastWork": 1729350000000,
+    "lastRob": 0,
+    "lastMine": 0,
+    "lastFish": 0,
+    "stats": {
+      "gamesPlayed": 34,
+      "gamesWon": 21,
+      "totalEarned": 98000
+    },
+    "inventory": {
+      "fish": {
+        "Tuna": 3
+      },
+      "ores": {
+        "Iron": 15,
+        "Coal": 30
+      }
+    },
+    "createdAt": 1729310000000,
+    "updatedAt": 1729350000000
+  },
+  "100012345678901": {
+    "uid": "100012345678901",
+    "name": "Alex Mercer (Member)",
+    "role": 0,
+    "balance": 15000,
+    "bank": 25000,
+    "exp": 600,
+    "level": 3,
+    "dailyStreak": 2,
+    "lastDaily": 1729350000000,
+    "lastWork": 0,
+    "lastRob": 0,
+    "lastMine": 0,
+    "lastFish": 0,
+    "stats": {
+      "gamesPlayed": 12,
+      "gamesWon": 6,
+      "totalEarned": 22000
+    },
+    "inventory": {},
+    "createdAt": 1729320000000,
+    "updatedAt": 1792459694615
+  }
+}

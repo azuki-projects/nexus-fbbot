@@ -1,0 +1,6 @@
+{
+  "name": "Nexus FB-Bot Manager & Engine",
+  "description": "Production-grade Facebook Messenger bot engine powered by Node.js and ws3-fca with Web Login, modular commands, role access control, 20+ games, 15+ tools, and persistent user economy.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
