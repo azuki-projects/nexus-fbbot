@@ -11,17 +11,24 @@ import {
 } from './types.ts';
 
 // Dynamic import helper for ws3-fca
-let ws3fca: any = null;
+let ws3fcaLogin: any = null;
 const loadWs3Fca = async () => {
-  if (!ws3fca) {
+  if (!ws3fcaLogin) {
     try {
-      const mod = await import('@tas33n/ws3-fca');
-      ws3fca = mod.default || mod;
+      const mod: any = await import('@tas33n/ws3-fca');
+      // @tas33n/ws3-fca exports { login: fn } or default { login: fn } or default fn
+      const fn = mod?.login || mod?.default?.login || (typeof mod?.default === 'function' ? mod.default : (typeof mod === 'function' ? mod : null));
+      if (typeof fn === 'function') {
+        ws3fcaLogin = fn;
+      } else {
+        throw new Error('Unable to extract login function from @tas33n/ws3-fca exports');
+      }
     } catch (err: any) {
       console.warn('[ws3-fca] Note: ws3-fca module loaded with notice:', err.message);
+      throw err;
     }
   }
-  return ws3fca;
+  return ws3fcaLogin;
 };
 
 export class BotManager {
@@ -288,48 +295,82 @@ export class BotManager {
       }
 
       return new Promise((resolve) => {
-        login({ appState: config.appState }, config.loginOptions || {}, (err: any, api: any) => {
-          if (err) {
+        let isResolved = false;
+
+        const timeoutId = setTimeout(() => {
+          if (!isResolved) {
+            isResolved = true;
             this.status.state = 'error';
-            this.status.lastError = err.error || err.message || JSON.stringify(err);
-            this.addLog('error', `Facebook login failed: ${this.status.lastError}`);
-            return resolve({
+            this.status.lastError = 'Connection timed out. Facebook did not respond within 30 seconds.';
+            this.addLog('warn', 'ws3-fca login connection timed out.');
+            resolve({
               success: false,
-              message: `Facebook Login Error: ${this.status.lastError}`
+              message: 'Connection timed out. Please check your AppState cookies and internet connectivity.'
             });
           }
+        }, 30000);
 
-          this.activeApi = api;
-          this.status.state = 'running';
-          this.status.startTime = Date.now();
-          this.status.botUID = api.getCurrentUserID ? api.getCurrentUserID() : 'Connected';
-          this.addLog('info', `🎉 Bot successfully connected to Facebook! Bot UID: ${this.status.botUID}`);
+        try {
+          login({ appState: config.appState }, config.loginOptions || {}, (err: any, api: any) => {
+            if (isResolved) return;
+            isResolved = true;
+            clearTimeout(timeoutId);
 
-          // Listen for incoming messages
-          try {
-            const stopListen = api.listenMqtt((listenErr: any, event: any) => {
-              if (listenErr) {
-                this.addLog('error', `Listener error: ${listenErr.message || listenErr}`);
-                return;
-              }
-              if (!event) return;
+            if (err) {
+              this.status.state = 'error';
+              const errStr = typeof err === 'object' ? (err.error || err.message || JSON.stringify(err)) : String(err);
+              this.status.lastError = errStr;
+              this.addLog('error', `Facebook login failed: ${errStr}`);
+              return resolve({
+                success: false,
+                message: `Facebook Login Error: ${errStr}`
+              });
+            }
 
-              if (event.type === 'message' || event.type === 'message_reply') {
-                this.handleMessage(event, api, false).catch(e => {
-                  this.addLog('error', `Message handling exception: ${e.message}`);
-                });
-              }
+            this.activeApi = api;
+            this.status.state = 'running';
+            this.status.startTime = Date.now();
+            this.status.botUID = api.getCurrentUserID ? api.getCurrentUserID() : 'Connected';
+            this.addLog('info', `🎉 Bot successfully connected to Facebook! Bot UID: ${this.status.botUID}`);
+
+            // Listen for incoming messages
+            try {
+              const stopListen = api.listenMqtt((listenErr: any, event: any) => {
+                if (listenErr) {
+                  this.addLog('error', `Listener error: ${listenErr.message || listenErr}`);
+                  return;
+                }
+                if (!event) return;
+
+                if (event.type === 'message' || event.type === 'message_reply') {
+                  this.handleMessage(event, api, false).catch(e => {
+                    this.addLog('error', `Message handling exception: ${e.message}`);
+                  });
+                }
+              });
+              this.stopListener = stopListen;
+            } catch (e: any) {
+              this.addLog('warn', `MQTT listener fallback notice: ${e.message}`);
+            }
+
+            resolve({
+              success: true,
+              message: `Bot connected successfully as UID ${this.status.botUID}`
             });
-            this.stopListener = stopListen;
-          } catch (e: any) {
-            this.addLog('warn', `MQTT listener fallback notice: ${e.message}`);
-          }
-
-          resolve({
-            success: true,
-            message: `Bot connected successfully as UID ${this.status.botUID}`
           });
-        });
+        } catch (loginErr: any) {
+          if (!isResolved) {
+            isResolved = true;
+            clearTimeout(timeoutId);
+            this.status.state = 'error';
+            this.status.lastError = loginErr.message || String(loginErr);
+            this.addLog('error', `Login invocation error: ${this.status.lastError}`);
+            resolve({
+              success: false,
+              message: `Login Error: ${this.status.lastError}`
+            });
+          }
+        }
       });
     } catch (err: any) {
       this.status.state = 'error';

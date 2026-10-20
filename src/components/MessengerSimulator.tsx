@@ -50,7 +50,7 @@ export const MessengerSimulator: React.FC<MessengerSimulatorProps> = ({
   const testUsers: Record<BotRole, { uid: string; name: string }> = {
     0: { uid: '100012345678901', name: 'Alex Mercer (Member)' },
     1: { uid: '100098765432100', name: 'Sarah Connor (Admin)' },
-    2: { uid: '100089234123456', name: 'Nexus Master (Owner)' }
+    2: { uid: '61591202796671', name: 'Bot Owner (Role 2)' }
   };
 
   const currentTestUser = testUsers[selectedRole];

@@ -17,7 +17,7 @@ export const ExportDeploy: React.FC<ExportDeployProps> = ({ config }) => {
  */
 const fs = require('fs');
 const path = require('path');
-const login = require('@tas33n/ws3-fca');
+const { login } = require('@tas33n/ws3-fca');
 
 const CONFIG_PATH = path.join(__dirname, 'config.json');
 const USERS_PATH = path.join(__dirname, 'data', 'users.json');

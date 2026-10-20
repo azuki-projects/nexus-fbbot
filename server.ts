@@ -118,7 +118,7 @@ async function startServer() {
  */
 const fs = require('fs');
 const path = require('path');
-const login = require('@tas33n/ws3-fca');
+const { login } = require('@tas33n/ws3-fca');
 
 const config = JSON.parse(fs.readFileSync(path.join(__dirname, 'config.json'), 'utf-8'));
 const usersFile = path.join(__dirname, 'data', 'users.json');

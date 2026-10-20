@@ -1,8 +1,39 @@
 {
+  "61591202796671": {
+    "uid": "61591202796671",
+    "name": "Bot Owner",
+    "role": 2,
+    "balance": 500000,
+    "bank": 2000000,
+    "exp": 5000,
+    "level": 20,
+    "dailyStreak": 15,
+    "lastDaily": 1729350000000,
+    "lastWork": 1729350000000,
+    "lastRob": 0,
+    "lastMine": 1729350000000,
+    "lastFish": 1729350000000,
+    "stats": {
+      "gamesPlayed": 100,
+      "gamesWon": 70,
+      "totalEarned": 650000
+    },
+    "inventory": {
+      "fish": {
+        "Mythic Golden Koi": 3
+      },
+      "ores": {
+        "Diamond": 10,
+        "Netherite": 2
+      }
+    },
+    "createdAt": 1729300000000,
+    "updatedAt": 1792475967780
+  },
   "100089234123456": {
     "uid": "100089234123456",
-    "name": "Nexus Master (Owner)",
-    "role": 2,
+    "name": "Nexus Master (Admin)",
+    "role": 1,
     "balance": 250000,
     "bank": 1000000,
     "exp": 4500,
